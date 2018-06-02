@@ -1,4 +1,4 @@
-A (Network) Security And Exploiting Tool Written In Python.
+A (Network) Security And Exploiting Tool/Platform Written In Python.
 
 Consider That Influx Is Still In Development So There Can Be A Lot Of Problems With Modules Or The Core Itself. Please Report Any Issue And/Or Any Suggestion You Might Think Will Help Me Make It Better.
 
