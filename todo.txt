@@ -12,3 +12,5 @@ to the guest.*
 5.Create the Influx-repositories(influx repository server) wich will provide Influx-Modules to connected Influx clients.
 (needs a method of verification)
 6.Create the project manager.
+7.Multi module handeling.
+*either both modules run at the same time, or the set parameters and the results of a module won't get deleted after chaning the module so that the users can get back to what they were doing before the module change.*
