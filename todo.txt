@@ -1,0 +1,14 @@
+1.Get first command line argument wich influx is called with and load the named module as starting.
+2.Set up remote controll from other influx client across the network:
+remote host [port] [password(if required)] --> start hosting for incoming connections
+remote connect [ip] [port] [password(if required)] --> connect to remote listening influx
+remote status  --> shows connection status for both host and guest
+
+*this is going to need to replace all print calls in Commands.py to a custom function which first checks if it is a remote or
+a local command call and then if it was local it will use print and if it was remote it would send the result over the network
+to the guest.*
+3.Make the debugging mode dynamic.
+4.Create the update system
+5.Create the Influx-repositories(influx repository server) wich will provide Influx-Modules to connected Influx clients.
+(needs a method of verification)
+6.Create the project manager.
