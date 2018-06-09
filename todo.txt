@@ -5,7 +5,7 @@ remote connect [ip] [port] [password(if required)] --> connect to remote listeni
 remote status  --> shows connection status for both host and guest
 
 *this is going to need to replace all print calls in Commands.py to a custom function which first checks if it is a remote or
-a local command call and then if it was local it will use print and if it was remote it would send the result over the network
+a local command(the script itself or another program using the API.) call and then if it was local it will use print and if it was remote it would send the result over the network
 to the guest.*
 3.Make the debugging mode dynamic.
 4.Create the update system
@@ -14,3 +14,4 @@ to the guest.*
 6.Create the project manager.
 7.Multi module handeling.
 *either both modules run at the same time, or the set parameters and the results of a module won't get deleted after chaning the module so that the users can get back to what they were doing before the module change.*
+8.The API System so that other programs can use influx and the included Influx-Modules inside their own code.(requires more edit in the custom print function in order to report the result to the API user.)
