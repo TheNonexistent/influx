@@ -2,10 +2,10 @@ class infmod:
 	#Influx Section
    def __init__(self):
        self.name = "Module Name"
-       self.description = "This Module Is A Test Module For Influx. Everything Will Be Included Later"
+       self.description = "This Module Is A Test Module For Influx."
        self.parameters = {"LocalAddress":None, "RemoteAddress":None, "Port":None}
-       #"None" Is Developer's Empty Parameter. Influx Won't Avoid Running If One Of The Parameters Are This Type.
-       #None Is Influx's Empty Parameter. Influx Will Avoid Running If One Of The Parameters Are This Type.
+       #"None"(String) Is The Developer's Empty Parameter. Influx Will Not Avoid Executing The Module If One Of The Parameters Are Of This Type.
+       #None(Null) Is Influx's Empty Parameter. Influx Will Avoid Executing The Module If One Of The Parameters Are Of This Type.
 	   #...
 
    def __str__(self):
@@ -16,9 +16,14 @@ class infmod:
 
 
 def influx_module_main(prams):
-    #Developer Section
+    #Developer's Section:In This Section The Developer Of The Influx-Module Will Be Able To Receive The Parameters Given By The User Through Influx Core And Work With Them. 
     influx_module = infmod
     print(influx_module)
     print("Module Ran Succesfully. Received Prameters Are:")
     for Key in prams.keys():
     	print(str(Key) + " : " + str(prams[Key]))
+	
+	
+if __name__ == "__main__":
+    print("This File Is An Influx-Module Created To Be Imported In The Influx Core And Function Within It.")
+    print("It Is Not Meant To Run On It's Own. You Can Import This Module To A Matching Influx Version.")
