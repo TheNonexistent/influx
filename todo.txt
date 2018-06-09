@@ -15,3 +15,5 @@ to the guest.*
 7.Multi module handeling.
 *either both modules run at the same time, or the set parameters and the results of a module won't get deleted after chaning the module so that the users can get back to what they were doing before the module change.*
 8.The API System so that other programs can use influx and the included Influx-Modules inside their own code.(requires more edit in the custom print function in order to report the result to the API user.)
+9.Create The Updater. The Updater will use influx-repositories to update Influx Core
+*there must be a Influx-Module updater aswell. they can all be the same code or can be developed separately. both will use the influx repository server wich is a different project to be worked on.*
