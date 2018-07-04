@@ -14,7 +14,7 @@ def show_help():
 
 def isset(var):
    try:
-      var 
+      var
    except NameError:
       return False
    return True
@@ -68,6 +68,3 @@ elif code == 3:
 
 print("")
 print(Status.INFO + "Job Finished!")
-print(Status.INFO + "Coded By The Nonexistent")
-   
-      

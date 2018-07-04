@@ -42,10 +42,11 @@ def influx_module_main(prams):
       data = conn.recv(1024)
       print(Status["INFO"] + "Type quit For Exit")
       while 1:
-         command = raw_input("Enter Shell Command: ")
-         conn.send(command)
+         command = input("Enter Shell Command: ")
+         conn.send(command.encode())
          if command == "quit": break
-         data = conn.recv(1024)
+         data = conn.recv(1024).decode()
+         print("")
          print(data)
       conn.close()
    except KeyboardInterrupt:

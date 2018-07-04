@@ -3,11 +3,10 @@ import sys, os, subprocess, random, re
 
 #Influx Default Modules Import
 from Modules.InfluxPrint import *
+from Modules.Config import *
 
 class Commands:
    #Information Variables
-   influx_version = "0.0.4 Alpha"
-   influx_author = "The Nonexistent"
    influx_help = '''
    exit    Exits The Program
 
@@ -25,6 +24,8 @@ class Commands:
    load [Influx-Module]    Loads An Influx Module
 
    unload    Unloads A Loaded Influx Module
+
+   reload    Reloads A Loaded Influx Module From Code On Disk And Not From Cache
 
    modify [Influx-Module]    Modifies An Influx-Module
 
@@ -55,6 +56,8 @@ class Commands:
    load [Influx-Module]    Loads An Influx Module
 
    unload    Unloads A Loaded Influx Module
+
+   reload    Reloads A Loaded Influx Module From Code On Disk And Not From Cache
 
    modify [Influx-Module]    Modifies An Influx-Module
 
@@ -148,27 +151,18 @@ class Commands:
             #os.system("tree Infmod")
             tree = os.popen("tree Infmod")
             for tree_line in tree:
-               if tree_line.rstrip()[-11:] != "__init__.py" and tree_line.rstrip()[-4:] != ".pyc":
+               if tree_line.rstrip()[-11:] != "__init__.py" and tree_line.rstrip()[-4:] != ".pyc" and tree_line.rstrip()[-11:] != "__pycache__":
                   print(tree_line,end='')
          else:
             print(Status["ERROR"] + "Your System Does Not Support Tree.Or Something Went Wrong!")
-            print(Status["ERROR"] + "You Can Install tree Package And Try Again.")
+            print(Status["ERROR"] + "You Can Use The 'list' Command Instead.")
+            print(Status["ERROR"] + "Or You Can Install tree Package And Try Again.")
       elif command == "help":
          self.Show_Help()
       #Load Parser
       elif command.startswith("load"):
          module_n = command[5:]
-         if module_n == "":
-            print(Status["ERROR"] + "No Influx Module Specified.")
-         else:
-            module_n = re.sub(r'\b.py\b', '', module_n)
-            path = "Infmod/" + module_n + ".py"
-            path = os.path.join(self.influx_path, path)
-            if os.path.isfile(path):
-               #InfmodHandler.InfmodHandler(module_n, path)
-                return [module_n, path]
-            else:
-               print(Status["ERROR"] + "Influx Module Not Found.")
+         return self.Load(module_n)
       elif command == "unload":
          if self.isloaded:
             return True
@@ -189,8 +183,8 @@ class Commands:
          print(Status["INFO"] + "List Of All Influx-Modules:\n")
          infmodes = self.Walk("Infmod")
          for infmod in infmodes:
-            if infmod[len(infmod) - 1] != "__init__.py" and infmod[len(infmod) - 1][-4:] != ".pyc":
-               print(infmod[-2] + "/" + infmod[-1])
+            if infmod[len(infmod) - 1] != "__init__.py" and infmod[len(infmod) - 1][-4:] != ".pyc" and infmod[len(infmod) - 1] != ".gitignore" and infmod[len(infmod) - 1] != "__pycache__":
+               print(infmod[-2] + "/" + infmod[-1][:-3])
          print("")
       #Infmod Handler Commands
       elif command == "parameters":
@@ -221,7 +215,7 @@ class Commands:
              except:
                 valid_v = False
              if valid_p and sopt[1] != "":
-                if valid_v and sopt[2] != "":  
+                if valid_v and sopt[2] != "":
                    if sopt[1] in self.influx_module.parameters.keys():
                       self.influx_module.parameters[sopt[1]] = sopt[2]
                       print("")
@@ -230,9 +224,9 @@ class Commands:
                    else:
                       print(Status["ERROR"] + "Given Parameter Does Not Exist")
                 else:
-                   print(Status["ERROR"] + "No Value Given") 
+                   print(Status["ERROR"] + "No Value Given")
              else:
-                print(Status["ERROR"] + "No Parameter Specified")     
+                print(Status["ERROR"] + "No Parameter Specified")
           else:
              print(Status["ERROR"] + "No Influx Module Loaded.")
       elif command == "run" or command == "execute" or command == "exploit":
@@ -258,13 +252,15 @@ class Commands:
              print("")
           else:
              print(Status["ERROR"] + "No Influx Module Loaded.")
+      elif command == "reload":
+         print(Status["ERROR"] + "No Influx Module Loaded.")
       else:
          print(Status["ERROR"] + "Command Not Found.")
 
    ##Subsidiary Functionexits##
    #Show Influx Banner
    def Show_Banner(self):
-      banner_id = random.randint(1,3)
+      banner_id = random.randint(1,5)
       self.Clear()
       if banner_id == 1:
          print(Color["LBLUE"] + """
@@ -272,7 +268,7 @@ class Commands:
    |_ _| \ | |  ___| |  | | | \ \/ /
     | ||  \| | |_  | |  | | | |\  /
     | || |\  |  _| | |__| |_| |/  \\
-   |___|_| \_|_|   |_____\___//_/\_\\[Alpha]
+   |___|_| \_|_|   |_____\___//_/\_\\ FrameWork [Alpha]
                                 """ + Color["ENDC"])
       elif banner_id == 2:
          print(Color["LRED"] + """
@@ -280,7 +276,7 @@ class Commands:
     ____  _/__  | / /__  ____/__  / __  / / /_  |/ /
      __  / __   |/ /__  /_   __  /  _  / / /__    /
     __/ /  _  /|  / _  __/   _  /___/ /_/ / _    |
-    /___/  /_/ |_/  /_/      /_____/\____/  /_/|_|[Alpha]
+    /___/  /_/ |_/  /_/      /_____/\____/  /_/|_| FrameWork [Alpha]
                                """ + Color["ENDC"])
       elif banner_id == 3:
          print(Color["LYELLOW"] + """
@@ -290,11 +286,36 @@ class Commands:
      #  #  #  # #####   #       #     #    #
      #  #   # # #       #       #     #   # #
      #  #    ## #       #       #     #  #   #
-    ### #     # #       #######  #####  #     # [Alpha]
+    ### #     # #       #######  #####  #     # FrameWork [Alpha]
                                   """ + Color["ENDC"])
+      elif banner_id == 4:
+         print(Color["GREEN"] + """
+.:: .:::     .:: .:::::::: .::       .::     .:: .::     .::
+.:: .: .::   .:: .::       .::       .::     .::  .::   .::
+.:: .:: .::  .:: .::       .::       .::     .::   .:: .::
+.:: .::  .:: .:: .::::::   .::       .::     .::     .::
+.:: .::   .: .:: .::       .::       .::     .::   .:: .::
+.:: .::    .: :: .::       .::       .::     .::  .::   .::
+.:: .::      .:: .::       .::::::::   .:::::    .::     .:: FrameWork [Alpha]
+         """ + Color["ENDC"])
+      elif banner_id == 5:
+         print(Color["PURPLE"] + """
+===========================================================
+=    ==  =======  ==        ==  ========  ====  ==   ==   =
+==  ===   ======  ==  ========  ========  ====  ===  ==  ==
+==  ===    =====  ==  ========  ========  ====  ===  ==  ==
+==  ===  ==  ===  ==  ========  ========  ====  ====    ===
+==  ===  ===  ==  ==      ====  ========  ====  =====  ====
+==  ===  ====  =  ==  ========  ========  ====  ====    ===
+==  ===  =====    ==  ========  ========  ====  ===  ==  ==
+==  ===  ======   ==  ========  ========   ==   ===  ==  ==
+=    ==  =======  ==  ========        ===      ===  ====  =
+=========================================================== FrameWork [Alpha]
+         """ + Color["ENDC"])
+
       print("")
-      print(Color["LGREEN"] + "[+]Version: " + self.influx_version + Color["ENDC"])
-      print(Color["LGREEN"] + "[+]Created By: " + self.influx_author + Color["ENDC"])
+      print(Color["LGREEN"] + "[+]Version: " + influx_version + Color["ENDC"])
+      print(Color["LGREEN"] + "[+]Created By: " + influx_author + Color["ENDC"])
       print(Color["LGREEN"] + "[+]Github: " + "https://github.com/TheNonexistent/influx/" + Color["ENDC"])
       print(Color["LBLUE"] + "[+]Influx Modules Found: " + str(self.Count_Infmod()) + Color["ENDC"])
       print("")
@@ -347,3 +368,15 @@ class Commands:
             infmod = infmod.split('/')
             infmods.append(infmod[:])
       return infmods
+   def Load(self,module_n):
+       if module_n == "":
+          print(Status["ERROR"] + "No Influx Module Specified.")
+       else:
+          module_n = re.sub(r'\b.py\b', '', module_n)
+          path = "Infmod/" + module_n + ".py"
+          path = os.path.join(self.influx_path, path)
+          if os.path.isfile(path):
+             #InfmodHandler.InfmodHandler(module_n, path)
+              return [module_n, path]
+          else:
+             print(Status["ERROR"] + "Influx Module Not Found.")

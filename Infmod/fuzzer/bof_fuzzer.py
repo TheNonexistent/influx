@@ -8,12 +8,11 @@ from Modules.InfluxPrint import *
 from Modules.InfluxExceptions import *
 
 class infmod:
-  #Influx Section
+   #Influx Section
    def __init__(self):
        self.name = "Buffer Overflow Fuzzer"
        self.description = "This Module Will Create Buffers For Fuzzing Buffer Overflow Vulnerable Applications.\n" + "Output Parameter :\n   screen(Default) : Show On Screen \n   file : Print To File(Set The File Path If Selected)\n   both : Show On Screen And Print To File(Set The File Path If Selected)"
        self.parameters = {"Character":None, "Count":None, "Output":"screen", "FilePath":"None"}
-     #...
 
    def __str__(self):
        return "[" + self.name + "] Influx Module Object."
@@ -24,7 +23,7 @@ class infmod:
 
 def isset(var):
    try:
-      var 
+      var
    except NameError:
       return False
    return True
@@ -40,7 +39,8 @@ def influx_module_main(prams):
    elif op == 'both':
       code = 3
    else:
-      raise StopModuleException("Option Fault!") 
+      print(Status["ERROR"] + "Output Type Not Recognized.")
+      raise StopModuleException("Output Type Not Recognized.")
 
    print(Status["INFO"] + "Simple Buffer Overflow Fuzzer")
    print("")
@@ -66,10 +66,9 @@ def influx_module_main(prams):
         handle = open(outfile, 'w')
         handle.write(char*count)
         handle.close()
+     print("")
+     print(Status["INFO"] + "Job Finished!")
    except KeyboardInterrupt:
       raise ModuleKeyboardInterrupt()
    except:
       raise StopModuleException("Something Went Wrong")
-
-print("")
-print(Status["INFO"] + "Job Finished!")

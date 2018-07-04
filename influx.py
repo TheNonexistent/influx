@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 from __future__ import print_function
 import sys,os
 import readline
@@ -7,6 +7,7 @@ import readline
 from Modules.Commands import *
 from Modules.InfluxPrint import *
 from Modules.InfmodHandler import *
+from Modules.Config import *
 
 ##Functions##
 
@@ -14,18 +15,36 @@ from Modules.InfmodHandler import *
 
 #InProgram Variables
 module_name = "Home"
-influx_path = str(os.path.realpath(__file__)).split('/')
-influx_path = '/'.join(influx_path[:-1])
+
 
 #Main Part
+if len(sys.argv) >= 2:
+    if sys.argv[1] == "help":
+        print("")
+        print(Status["INFO"] + "Use '" + sys.argv[0] + " InlfuxModule' To Start Directly With Loaded Module")
+        print("")
+        sys.exit()
+
 print(Status["INFO"] + "Influx Started.")
 print("")
 infCommands = Commands(False, influx_path,None)
 infCommands.Show_Banner()
+
+if len(sys.argv) >= 2:
+    print(Status["INFO"] + "Starting Influx With Loaded Module.")
+    print("")
+    loadval = infCommands.Command("load " + sys.argv[1])
+    try:
+      loadval
+    except NameError:
+      pass
+    else:
+       if isinstance(loadval, list):
+          InfmodHandler(loadval[0], loadval[1])
 try:
    while True:
       command = ""
-      command = raw_input(Color["BLUE"] + "inf" + Color["ENDC"] + ":[" + Color["GREEN"] + module_name + Color["ENDC"] + "]>")
+      command = input(Color["BLUE"] + "inf" + Color["ENDC"] + ":[" + Color["GREEN"] + module_name + Color["ENDC"] + "]>")
       if command != "":
          loadval = infCommands.Command(command)
       try:

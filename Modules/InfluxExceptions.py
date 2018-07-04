@@ -3,3 +3,6 @@ class StopModuleException(Exception):
 
 class ModuleKeyboardInterrupt(Exception):
    pass
+
+class ConfigurationException(Exception):
+    pass

@@ -55,9 +55,9 @@ def plat_php(Type):
 def plat_python(Type):
    if Type == 'blind_tcp':
       print("Input The Remote Host: ", end='')
-      rhost = raw_input()
+      rhost = input()
       print("Input The Remote Port[Listen Port]: ", end='')
-      rport = raw_input()
+      rport = input()
       print("")
       print("")
       counter = 1
