@@ -316,7 +316,7 @@ class Commands:
       print("")
       print(Color["LGREEN"] + "[+]Version: " + influx_version + Color["ENDC"])
       print(Color["LGREEN"] + "[+]Created By: " + influx_author + Color["ENDC"])
-      print(Color["LGREEN"] + "[+]Github: " + "https://github.com/TheNonexistent/influx/" + Color["ENDC"])
+      print(Color["LGREEN"] + "[+]GitLab: " + "https://gitlab.com/TheNonexistent/influx/" + Color["ENDC"])
       print(Color["LBLUE"] + "[+]Influx Modules Found: " + str(self.Count_Infmod()) + Color["ENDC"])
       print("")
 
